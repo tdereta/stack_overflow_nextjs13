@@ -13,6 +13,8 @@ export default authMiddleware({
         '/profile/:id',
         '/community',
         '/jobs',
+        '/sign-in',
+        '/ask-question',
     ],
     ignoredRoutes: [
         '/api/webhook',
