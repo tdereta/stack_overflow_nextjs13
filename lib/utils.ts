@@ -41,14 +41,14 @@ export const getTimestamp = (createdAt: Date): string => {
   }
 };
 
-export const shortenNumber = (number: number): string => {
-  if (number >= 1000000) {
-    return `${(number / 1000000).toFixed(1)}M`;
+export const formatAndDivideNumber = (num: number): string => {
+  if (num >= 1000000) {
+    const formattedNum = (num / 1000000).toFixed(1)
+    return `${formattedNum}M`
+  } else if (num >= 1000) {
+    const formattedNum = (num / 1000).toFixed(1)
+    return `${formattedNum}K`
+  } else {
+    return num.toString()
   }
-
-  if (number >= 1000) {
-    return `${(number / 1000).toFixed(1)}K`;
-  }
-
-  return number.toString();
-};
+}

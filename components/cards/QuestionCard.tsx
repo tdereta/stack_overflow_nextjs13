@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import RenderTag from "@/components/shared/RenderTag"
 import Metric from "@/components/shared/Metric";
-import {getTimestamp, shortenNumber} from "@/lib/utils";
+import {formatAndDivideNumber, getTimestamp} from "@/lib/utils"
 
 interface QuestionProps {
     _id: string
@@ -47,7 +47,7 @@ const QuestionCard = ({ _id, title, tags, author, upVotes, views, answers, creat
             </div>
             <div className="flex-between mt-6 w-full flex-wrap gap-3">
                 <Metric
-                    imgUrl={author.picture}
+                    imgUrl="/assets/icons/avatar.svg"
                     alt="User"
                     value={author.name}
                     title={`\u00A0\u2022 asked ${getTimestamp(createdAt)}`}
@@ -58,21 +58,21 @@ const QuestionCard = ({ _id, title, tags, author, upVotes, views, answers, creat
                 <Metric
                     imgUrl="/assets/icons/like.svg"
                     alt="Upvotes"
-                    value={shortenNumber(upVotes)}
+                    value={formatAndDivideNumber(upVotes)}
                     title={"\u00A0Votes"}
                     textStyles="small-medium text-dark400_light800"
                 />
                 <Metric
                     imgUrl="/assets/icons/message.svg"
                     alt="Message"
-                    value={shortenNumber(answers.length)}
+                    value={formatAndDivideNumber(answers.length)}
                     title={"\u00A0Answers"}
                     textStyles="small-medium text-dark400_light800"
                 />
                 <Metric
                     imgUrl="/assets/icons/eye.svg"
                     alt="View"
-                    value={shortenNumber(views)}
+                    value={formatAndDivideNumber(views)}
                     title={"\u00A0Views"}
                     textStyles="small-medium text-dark400_light800"
                 />
