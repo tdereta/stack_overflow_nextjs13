@@ -20,7 +20,7 @@ interface Props {
 }
 
 const Answer = ({ question, questionId, authorId }: Props) => {
-    const pathname = usePathname();
+    const pathname = usePathname()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const { mode } = useTheme();
     const editorRef = useRef(null)

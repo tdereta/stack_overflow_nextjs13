@@ -1,48 +1,17 @@
-"use client"
+"use server"
 
 import React from 'react'
 import Link from "next/link"
 import Image from "next/image"
-import {usePathname} from "next/navigation"
 import RenderTag from "@/components/shared/RenderTag"
+import {getHotQuestions} from "@/lib/actions/question.action"
+import {getPopularTags} from "@/lib/actions/tag.action"
 
-const RightSidebar = () => {
-    const topQuestions = [
-        {
-            _id: 1, title: "What is the difference between var and let?"
-        },
-        {
-            _id: 2, title: "What is the difference between var and let?"
-        },
-        {
-            _id: 3, title: "What is the difference between var and let?"
-        },
-        {
-            _id: 4, title: "What is the difference between var and let?"
-        },
-        {
-            _id: 5, title: "What is the difference between var and let?"
-        }
-    ]
+const RightSidebar = async () => {
+    const hotQuestions = await getHotQuestions()
 
-    const popularTags = [
-        {
-            _id: '1', name: "NextJS", number: 21
-        },
-        {
-            _id: '2', name: "Test", number: 15
-        },
-        {
-            _id: '3', name: "React", number: 13
-        },
-        {
-            _id: '4', name: "CSS", number: 10
-        },
-        {
-            _id: '5', name: "Next JS", number: 8
-        },
-    ]
-        const pathname = usePathname()
+    const popularTags = await getPopularTags()
+
         return (
             <section className="background-light900_dark200 light-border custom-scrollbar sticky right-0 top-0
         flex h-screen flex-col justify-between overflow-y-auto p-6 pt-36
@@ -50,8 +19,8 @@ const RightSidebar = () => {
                 <div className="flex flex-1 flex-col gap-2">
                     <h3 className="h3-bold text-dark200_light900">Top Questions</h3>
                     <div className="mt-7 flex flex-col w-full gap-3">
-                        {topQuestions.map((question) => (
-                            <Link href={`questions/${question._id}`}
+                        {hotQuestions.map((question) => (
+                            <Link href={`question/${question._id}`}
                                   key={question._id}
                                   className="flex cursor-pointer items-center justify-between gap-7">
                                 <p className="body-medium text-dark500_light700">{question.title}</p>
@@ -73,7 +42,7 @@ const RightSidebar = () => {
                                 key={tag._id}
                                 _id={tag._id}
                                 name={tag.name}
-                                number={tag.number}
+                                number={tag.numberOfQuestions}
                                 showCount
                             />
                         ))}

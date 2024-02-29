@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
- 
+import qs from "query-string"
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -51,4 +52,71 @@ export const formatAndDivideNumber = (num: number): string => {
   } else {
     return num.toString()
   }
+}
+
+//get the javascript date object as a parameter and return joined date (just month and year)
+export const getJoinDate = (date: Date): string => {
+  // Extract the month and year from the Date object
+  const month = date.toLocaleString('default', { month: 'long' });
+  const year = date.getFullYear();
+
+  // Create the joined date string (e.g., "September 2023")
+  const joinDate = `${month} ${year}`;
+
+  return joinDate;
+}
+
+export const getJoinedDate = (date: Date): string => {
+  // Check if the date is a valid Date object
+  if (!(date instanceof Date) || isNaN(date.getTime())) {
+    return 'Invalid Date';
+  }
+
+  // Check if toLocaleString is supported
+  if (typeof date.toLocaleString !== 'function') {
+    return 'toLocaleString not supported';
+  }
+
+  // Extract the month and year from the Date object
+  const month = date.toLocaleString('default', { month: 'long' });
+  const year = date.getFullYear();
+
+  // Create the joined date string (e.g., "September 2023")
+  const joinedDate = `${month} ${year}`;
+
+  return joinedDate;
+};
+
+interface UrlQueryParams {
+    params: string
+    key: string
+    value: string | null
+}
+export const formUrlQuery = ({ params, key, value }: UrlQueryParams) =>{
+  const currentUrl = qs.parse(params)
+
+  currentUrl[key] = value
+  return qs.stringifyUrl({
+    url: window.location.pathname,
+    query: currentUrl,
+  },
+      {skipNull: true})
+}
+
+interface RemoveUrlQueryParams {
+  params: string
+  keysToRemove: string[]
+}
+
+export const removeKeysFromQuery = ({ params, keysToRemove }: RemoveUrlQueryParams) =>{
+  const currentUrl = qs.parse(params)
+  keysToRemove.forEach((key) => {
+    delete currentUrl[key]
+  })
+
+  return qs.stringifyUrl({
+        url: window.location.pathname,
+        query: currentUrl,
+      },
+      {skipNull: true})
 }

@@ -3,6 +3,8 @@ import Link from 'next/link'
 import RenderTag from "@/components/shared/RenderTag"
 import Metric from "@/components/shared/Metric";
 import {formatAndDivideNumber, getTimestamp} from "@/lib/utils"
+import {SignedIn} from "@clerk/nextjs";
+import EditDeleteAction from "@/components/shared/EditDeleteAction";
 
 interface QuestionProps {
     _id: string
@@ -12,19 +14,22 @@ interface QuestionProps {
         name: string,
     }[]
     author: {
+        clerkId: string,
         _id: string,
         name: string,
         picture: string
     }
-    upVotes: number
+    upVotes: string[]
     views: number
     answers: Array<object>
     createdAt: Date
+    clerkId?: string
 }
 
-const QuestionCard = ({ _id, title, tags, author, upVotes, views, answers, createdAt } : QuestionProps) => {
+const QuestionCard = ({ clerkId, _id, title, tags, author, upVotes, views, answers, createdAt } : QuestionProps) => {
+    const showActionButtons = clerkId && clerkId === author.clerkId // Only show action buttons if the user exists and is the author
     return (
-        <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
+        <div className="rounded-[10px] p-9 sm:px-11">
             <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
                 <div>
                   <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
@@ -36,6 +41,14 @@ const QuestionCard = ({ _id, title, tags, author, upVotes, views, answers, creat
                         </h3>
                     </Link>
                 </div>
+                <SignedIn>
+                    {showActionButtons && (
+                        <EditDeleteAction
+                            type="Question"
+                            ItemId={JSON.stringify(_id)}
+                        />
+                    )}
+                </SignedIn>
             </div>
             <div className="mt-3.5 flex flex-wrap gap-2">
                 {tags.map((tag) => (
@@ -47,7 +60,7 @@ const QuestionCard = ({ _id, title, tags, author, upVotes, views, answers, creat
             </div>
             <div className="flex-between mt-6 w-full flex-wrap gap-3">
                 <Metric
-                    imgUrl="/assets/icons/avatar.svg"
+                    imgUrl={author.picture}
                     alt="User"
                     value={author.name}
                     title={`\u00A0\u2022 asked ${getTimestamp(createdAt)}`}
@@ -58,7 +71,7 @@ const QuestionCard = ({ _id, title, tags, author, upVotes, views, answers, creat
                 <Metric
                     imgUrl="/assets/icons/like.svg"
                     alt="Upvotes"
-                    value={formatAndDivideNumber(upVotes)}
+                    value={formatAndDivideNumber(upVotes.length)}
                     title={"\u00A0Votes"}
                     textStyles="small-medium text-dark400_light800"
                 />

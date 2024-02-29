@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getTimestamp } from '@/lib/utils';
 import ParseHTML from './ParseHTML';
+import Votes from "@/components/shared/Votes";
 
 interface Props {
     questionId: string;
@@ -23,9 +24,9 @@ const AllAnswers = async ({ questionId, userId, totalAnswers, page, filter }: Pr
     return (
         <div className="mt-11">
             <div className="flex items-center justify-between">
-                <h3 className="primary-text-gradient">{totalAnswers} Answers</h3>
+                <h3 className="primary-text-gradient">{totalAnswers === 1 ? `${totalAnswers} Answer` : `${totalAnswers} Answers`}</h3>
 
-                <Filter filters={AnswerFilters}/>
+                <Filter filters={AnswerFilters} />
             </div>
 
             <div>
@@ -47,13 +48,21 @@ const AllAnswers = async ({ questionId, userId, totalAnswers, page, filter }: Pr
                                         </p>
 
                                         <p className="small-regular text-light400_light500 ml-0.5 mt-0.5 line-clamp-1">
-                                            answered {" "}
+                                            {" "} answered {" "}
                                             {getTimestamp(answer.createdAt)}
                                         </p>
                                     </div>
                                 </Link>
                                 <div className="flex justify-end">
-                                    VOTING
+                                    <Votes
+                                        type="answer"
+                                        itemId={JSON.stringify(answer._id)}
+                                        userId={JSON.stringify(userId)}
+                                        upVotes={answer.upVotes.length}
+                                        hasUpVoted={answer.upVotes.includes(userId)}
+                                        downVotes={answer.downVotes.length}
+                                        hasDownVoted={answer.downVotes.includes(userId)}
+                                    />
                                 </div>
                             </div>
 
